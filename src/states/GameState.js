@@ -27,9 +27,9 @@ class GameState extends Phaser.State {
         this.grid = new Grid(BOARD_SIZE);
 
         // initialize groups for tiles and pegs
-        this.board = this.game.add.group(undefined, 'board');
-        this.tiles = this.game.add.group(this.board, 'tiles');
-        this.pegs = this.game.add.group(this.board, 'pegs');
+        this.boardGroup = this.game.add.group(undefined, 'board');
+        this.tilesGroup = this.game.add.group(this.boardGroup, 'tiles');
+        this.pegsGroup = this.game.add.group(this.boardGroup, 'pegs');
 
         // populate board
         for (const { x, y } of this.grid) {
@@ -45,18 +45,18 @@ class GameState extends Phaser.State {
         this.grid.log();
 
         // center board
-        this.board.x = MIDDLE;
-        this.board.y = (MIDDLE - this.board.height / 2) * 1.3;
+        this.boardGroup.x = MIDDLE;
+        this.boardGroup.y = (MIDDLE - this.boardGroup.height / 2) * 1.3;
     }
 
     addTile({ x, y }) {
-        const tile = this.game.add.sprite(x, y, 'tile', undefined, this.tiles);
+        const tile = this.game.add.sprite(x, y, 'tile', undefined, this.tilesGroup);
         tile.anchor.x = 0.5;
         tile.anchor.y = 0.375;
     }
 
     addPeg({ x, y }) {
-        const peg = new Peg(this.game, this.pegs, x, y);
+        const peg = new Peg(this.game, this.pegsGroup, x, y);
         peg.sprite.events.onInputUp.add(this.onPegClick, this);
         return peg;
     }
@@ -69,10 +69,11 @@ class GameState extends Phaser.State {
 
     hasValidMoves({x, y}) {
         let validMoves = 0;
+        const grid = this.grid;
 
         // check nw
-        if (this.hasPeg(x - 1, y - 1)) {
-            if (this.isEmpty(x - 2, y - 2)) {
+        if (!grid.isEmpty(x - 1, y - 1)) {
+            if (grid.isEmpty(x - 2, y - 2)) {
                 validMoves++;
             }
         }
