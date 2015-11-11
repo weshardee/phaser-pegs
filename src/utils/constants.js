@@ -10,3 +10,10 @@ export const TILE_SIZE = 65;
 export const NUM_PEG_TYPES = 5;
 export const NUM_TILE_TYPES = 4;
 export const Y_HEX_FACTOR = 0.8;
+
+export const DEATH_DURATION = 200;
+export const DEATH_ALPHA = 0;
+export const DEATH_SCALE = {
+    x: 0,
+    y: 0,
+};

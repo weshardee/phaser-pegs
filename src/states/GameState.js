@@ -11,6 +11,9 @@ import {
     MIDDLE,
     NUM_PEG_TYPES,
     NUM_TILE_TYPES,
+    DEATH_DURATION,
+    DEATH_SCALE,
+    DEATH_ALPHA,
 } from '../utils/constants';
 
 const TILE_URI = 'images/tiles.png';
@@ -99,20 +102,13 @@ class GameState extends Phaser.State {
     }
 
     kill(sprite) {
-        const deathDuration = 200;
-        const alpha = 0;
-        const scale = {
-            x: 0,
-            y: 0,
-        };
-
         this.game.tweens.create(sprite)
-            .to({ alpha }, deathDuration)
+            .to({ alpha: DEATH_ALPHA }, DEATH_DURATION)
             .start()
         ;
 
         this.game.tweens.create(sprite.scale)
-            .to(scale, deathDuration)
+            .to(DEATH_SCALE, DEATH_DURATION)
             .start()
         ;
 
