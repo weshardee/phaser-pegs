@@ -73,7 +73,7 @@ class GameState extends Phaser.State {
         const isValid = this.isValidMove(startPos, endPos);
 
         if (!isValid) {
-            this.calm();
+            this.disappoint();
         }
     }
 
@@ -102,7 +102,7 @@ class GameState extends Phaser.State {
 
     onPegClick(sprite) {
         if (this.excited) {
-            this.calm();
+            this.disappoint();
         }
 
         // figure out pegboard position of click
@@ -131,7 +131,7 @@ class GameState extends Phaser.State {
         this.excitedTween = tween;
     }
 
-    calm() {
+    disappoint() {
         this.shake(this.excited);
         this.excitedTween.loop(false);
         this.excited = null;
