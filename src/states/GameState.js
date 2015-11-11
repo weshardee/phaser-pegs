@@ -14,6 +14,7 @@ import {
     DEATH_DURATION,
     DEATH_SCALE,
     DEATH_ALPHA,
+    BUTTON_URI,
 } from '../utils/constants';
 
 const TILE_URI = 'images/tiles.png';
@@ -24,6 +25,7 @@ class GameState extends Phaser.State {
         this.game.load.audio('error', AUDIO_ERROR_URI);
         this.game.load.spritesheet('tiles', TILE_URI, 65, 89, NUM_TILE_TYPES);
         this.game.load.spritesheet('pegs', PEGS_URI, 40, 66, NUM_PEG_TYPES);
+        this.game.load.spritesheet('button', BUTTON_URI, 190, 49);
     }
 
     create() {
@@ -52,7 +54,17 @@ class GameState extends Phaser.State {
 
         // center board
         this.boardGroup.x = MIDDLE;
-        this.boardGroup.y = (MIDDLE - this.boardGroup.height / 2) * 1.3;
+        this.boardGroup.y = (MIDDLE - this.boardGroup.height / 2) * 1.6;
+
+        // add reset button
+        const resetBtn = this.game.add.button(0, 0, 'button', this.reset, this, 1, 0, 2, 3);
+        resetBtn.anchor.x = 0.5;
+        resetBtn.x = MIDDLE;
+        resetBtn.y = 20;
+    }
+
+    reset() {
+        this.game.state.start('GameState', true, false);
     }
 
     addTile({ x, y }) {
