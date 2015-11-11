@@ -110,10 +110,15 @@ class GameState extends Phaser.State {
             .start()
         ;
 
-        this.game.tweens.create(sprite.scale)
+        const deathTween = this.game.tweens.create(sprite.scale)
             .to(scale, deathDuration)
             .start()
         ;
+
+        deathTween.onComplete.add(() => {
+            console.log('killed');
+            this.pegsGroup.remove(sprite)
+        });
     }
 
     isValidMove(startPos, endPos) {
