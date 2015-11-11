@@ -61,23 +61,40 @@ class GameState extends Phaser.State {
     }
 
     onPegClick(sprite) {
-        if (this.selected) {
-            return false;
+        if (this.excited) {
+            this.calm();
         }
 
         // figure out pegboard position of click
         const pos = getGridPosition(sprite);
 
         if (this.hasValidMoves(pos)) {
-            this.fade(sprite);
+            this.excite(sprite);
             this.selected = sprite;
         } else {
             this.shake(sprite);
         }
     }
 
-    fade(sprite) {
-        sprite.alpha = 0.5;
+    excite(sprite) {
+        const swing = 0.05;
+        const swingDuration = 90;
+        const tween = this.game.tweens.create(sprite)
+            .to({ rotation: swing }, swingDuration, Phaser.Easing.Back.Out)
+            .to({ rotation: 0 }, swingDuration, Phaser.Easing.Linear.None)
+            .to({ rotation: -swing }, swingDuration, Phaser.Easing.Back.Out)
+            .to({ rotation: 0 }, swingDuration, Phaser.Easing.Linear.None)
+            .loop(true)
+            .start()
+        ;
+        this.excited = sprite;
+        this.excitedTween = tween;
+    }
+
+    calm() {
+        this.shake(this.excited);
+        this.excitedTween.loop(false);
+        this.excited = null;
     }
 
     shake(sprite) {
