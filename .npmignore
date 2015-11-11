@@ -1,0 +1,9 @@
+node_modules/
+src/assets/vendor/
+web/
+
+*.log
+.*.swp
+.DS_Store
+env-*.js
+!env-dist.js
