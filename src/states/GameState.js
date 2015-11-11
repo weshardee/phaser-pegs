@@ -1,5 +1,9 @@
+import Grid from '../utils/Grid';
 import Peg from '../objects/Peg';
-import getPosition from '../utils/getPosition';
+import {
+    getGamePosition,
+    getGridPosition,
+} from '../utils/position';
 
 import {
     BOARD_SIZE,
@@ -20,28 +24,25 @@ class GameState extends Phaser.State {
     create() {
         this.game.stage.backgroundColor = 0x333333;
 
-        this.grid = new Array(BOARD_SIZE);
-
-        this.board = this.game.add.group(undefined, 'board');
+        this.grid = new Grid(BOARD_SIZE);
 
         // initialize groups for tiles and pegs
+        this.board = this.game.add.group(undefined, 'board');
         this.tiles = this.game.add.group(this.board, 'tiles');
         this.pegs = this.game.add.group(this.board, 'pegs');
 
         // populate board
-        for (let y = 0; y < BOARD_SIZE; y++) {
-            const rowLength = y + 1;
-            this.grid[y] = new Array(rowLength).fill(EMPTY);
+        for (const { x, y } of this.grid) {
+            const gamePosition = getGamePosition(x, y);
+            this.addTile(gamePosition);
 
-            for (let x = 0; x < rowLength; x++) {
-                const position = getPosition(x, y);
-                this.addTile(position);
-
-                if (y > 0) {
-                    this.addPeg(position);
-                }
+            if (y > 0) {
+                const peg = this.addPeg(gamePosition);
+                this.grid.setPosition(x, y, peg.id);
             }
         }
+
+        this.grid.log();
 
         // center board
         this.board.x = MIDDLE;
@@ -56,8 +57,59 @@ class GameState extends Phaser.State {
 
     addPeg({ x, y }) {
         const peg = new Peg(this.game, this.pegs, x, y);
+        peg.sprite.events.onInputUp.add(this.onPegClick, this);
         return peg;
     }
+
+    onPegClick(sprite) {
+        // figure out pegboard position of click
+        const pos = getGridPosition(sprite);
+        this.hasValidMoves(pos);
+    }
+
+    hasValidMoves({x, y}) {
+        let validMoves = 0;
+
+        // check nw
+        if (this.hasPeg(x - 1, y - 1)) {
+            if (this.isEmpty(x - 2, y - 2)) {
+                validMoves++;
+            }
+        }
+
+        // check w
+
+        // check sw
+
+        // check se
+
+        // check e
+
+        // check ne
+
+        return validMoves > 0;
+    }
+
+    hasPeg(x, y) {
+        if (this.isOutOfBounds(x, y)) {
+            return false;
+        }
+    }
+
+    getId(x, y) {
+        const row = this.grid[y];
+
+        if (row === undefined) {
+            return true;
+        }
+
+        const pos = row[x];
+
+        if (pos === undefined) {
+            return true;
+        }
+    }
+
 }
 
 export default GameState;
