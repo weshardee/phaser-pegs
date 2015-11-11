@@ -39,7 +39,11 @@ export default class Grid {
     }
 
     getPosition(x, y) {
-        return this.rows[y][x];
+        const row = this.rows[y];
+        if (row === undefined) {
+            return undefined;
+        }
+        return row[x];
     }
 
     setPosition(x, y, value) {
