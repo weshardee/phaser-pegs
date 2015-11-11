@@ -52,4 +52,7 @@ export default class Grid {
         }
     }
 
+    isEmpty(x, y) {
+        return this.getPosition(x, y) === EMPTY;
+    }
 }
