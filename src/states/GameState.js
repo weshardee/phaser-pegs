@@ -89,11 +89,9 @@ class GameState extends Phaser.State {
         this.excitedTween.loop(false);
         this.excited = null;
 
-        // TODO empty jumpedPos
+        // kill the jumped peg
         const middlePeg = this.getPegAt(middle);
-        console.log(startPos, middle, endPos);
         this.kill(middlePeg);
-        // const jumpedSprite =
 
         this.grid.log();
     }
