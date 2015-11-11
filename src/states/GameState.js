@@ -38,8 +38,8 @@ class GameState extends Phaser.State {
             this.addTile(gamePosition);
 
             if (y > 0) {
-                const peg = this.addPeg(gamePosition);
-                this.grid.setPosition(x, y, peg.id);
+                this.addPeg(gamePosition);
+                this.grid.fill({ x, y });
             }
         }
 
@@ -73,25 +73,82 @@ class GameState extends Phaser.State {
         const isValid = this.isValidMove(startPos, endPos);
 
         if (!isValid) {
-            this.disappoint();
+            return this.disappoint();
         }
+
+        const middle = this.getMiddle(startPos, endPos);
+        this.grid.fill(endPos);
+        this.grid.empty(startPos);
+        this.grid.empty(middle);
+
+        const endGamePos = getGamePosition(endPos.x, endPos.y);
+        this.excited.x = endGamePos.x;
+        this.excited.y = endGamePos.y;
+
+        // clear excited state
+        this.excitedTween.loop(false);
+        this.excited = null;
+
+        // TODO empty jumpedPos
+        const middlePeg = this.getPegAt(middle);
+        console.log(startPos, middle, endPos);
+        this.kill(middlePeg);
+        // const jumpedSprite =
+
+        this.grid.log();
+    }
+
+    kill(sprite) {
+        const deathDuration = 200;
+        const alpha = 0;
+        const scale = {
+            x: 0,
+            y: 0,
+        };
+
+        this.game.tweens.create(sprite)
+            .to({ alpha }, deathDuration)
+            .start()
+        ;
+
+        this.game.tweens.create(sprite.scale)
+            .to(scale, deathDuration)
+            .start()
+        ;
     }
 
     isValidMove(startPos, endPos) {
-        const middle = {
-            x: (startPos.x - endPos.x) / 2 + startPos.x,
-            y: (startPos.y - endPos.y) / 2 + startPos.y,
-        };
+        const middle = this.getMiddle(startPos, endPos);
 
         if (this.grid.isEmpty(middle)) {
             return false;
         }
 
         if (this.grid.isEmpty(endPos)) {
-            return true;
+            return middle;
         }
 
         return false;
+    }
+
+    getPegAt({ x, y }) {
+        const peg = this.pegsGroup.children.find(sprite => {
+            const gridPos = getGridPosition(sprite);
+            if (gridPos.x === x && gridPos.y === y) {
+                return true;
+            }
+            return false;
+        });
+        return peg;
+    }
+
+    getMiddle(startPos, endPos) {
+        const deltaX = startPos.x - endPos.x;
+        const deltaY = startPos.y - endPos.y;
+        return {
+            x: deltaX / 2 + endPos.x,
+            y: deltaY / 2 + endPos.y,
+        };
     }
 
     addPeg({ x, y }) {

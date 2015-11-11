@@ -1,5 +1,6 @@
 import {
     EMPTY,
+    FULL,
 } from './constants';
 
 export default class Grid {
@@ -46,8 +47,12 @@ export default class Grid {
         return row[x];
     }
 
-    setPosition(x, y, value) {
-        this.rows[y][x] = value;
+    empty({ x, y }) {
+        this.rows[y][x] = EMPTY;
+    }
+
+    fill({ x, y }) {
+        this.rows[y][x] = FULL;
     }
 
     log() {
