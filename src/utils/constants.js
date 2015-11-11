@@ -8,4 +8,5 @@ export const GAME_SIZE = 500;
 export const MIDDLE = GAME_SIZE / 2;
 export const TILE_SIZE = 65;
 export const NUM_PEG_TYPES = 5;
+export const NUM_TILE_TYPES = 4;
 export const Y_HEX_FACTOR = 0.8;
