@@ -1,3 +1,5 @@
+export const AUDIO_ERROR_URI = 'sounds/error.mp3';
+
 export const BOARD_SIZE = 5;
 export const EMPTY = 0;
 export const OFF_BOARD = undefined;

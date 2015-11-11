@@ -6,6 +6,7 @@ import {
 } from '../utils/position';
 
 import {
+    AUDIO_ERROR_URI,
     BOARD_SIZE,
     MIDDLE,
     NUM_PEG_TYPES,
@@ -16,6 +17,7 @@ const pegsURI = 'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAADACAYAAACT
 
 class GameState extends Phaser.State {
     preload() {
+        this.game.load.audio('error', AUDIO_ERROR_URI);
         this.game.load.image('tile', tileURI);
         this.game.load.spritesheet('pegs', pegsURI, 40, 64, NUM_PEG_TYPES);
     }
@@ -109,6 +111,7 @@ class GameState extends Phaser.State {
             .to(start, duration / 4)
             .start()
         ;
+        this.game.sound.play('error');
     }
 
     hasValidMoves({x, y}) {
