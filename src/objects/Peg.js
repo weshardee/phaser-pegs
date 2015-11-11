@@ -16,15 +16,6 @@ class Peg {
 
         //  Input Enable the sprite
         this.sprite.inputEnabled = true;
-        this.sprite.events.onInputDown.add(this.startMove, this);
-    }
-
-    startMove() {
-        this.sprite.alpha = 0.5;
-    }
-
-    endMove() {
-        this.sprite.alpha = 1;
     }
 }
 

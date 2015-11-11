@@ -7,7 +7,6 @@ import {
 
 import {
     BOARD_SIZE,
-    EMPTY,
     MIDDLE,
     NUM_PEG_TYPES,
 } from '../utils/constants';
@@ -62,9 +61,37 @@ class GameState extends Phaser.State {
     }
 
     onPegClick(sprite) {
+        if (this.selected) {
+            return false;
+        }
+
         // figure out pegboard position of click
         const pos = getGridPosition(sprite);
-        this.hasValidMoves(pos);
+
+        if (this.hasValidMoves(pos)) {
+            this.fade(sprite);
+            this.selected = sprite;
+        } else {
+            this.shake(sprite);
+        }
+    }
+
+    fade(sprite) {
+        sprite.alpha = 0.5;
+    }
+
+    shake(sprite) {
+        const duration = 100;
+        const dist = 5;
+        const start = { x: sprite.x };
+        const right = { x: sprite.x + dist };
+        const left = { x: sprite.x - dist };
+        this.game.tweens.create(sprite)
+            .to(left, duration / 4)
+            .to(right, duration / 2)
+            .to(start, duration / 4)
+            .start()
+        ;
     }
 
     hasValidMoves({x, y}) {
