@@ -52,8 +52,46 @@ class GameState extends Phaser.State {
 
     addTile({ x, y }) {
         const tile = this.game.add.sprite(x, y, 'tile', undefined, this.tilesGroup);
+
         tile.anchor.x = 0.5;
         tile.anchor.y = 0.375;
+
+        tile.inputEnabled = true;
+        tile.events.onInputUp.add(this.onTileClick, this);
+    }
+
+    onTileClick(sprite) {
+        const gridPos = getGridPosition(sprite);
+
+        if (this.excited) {
+            this.jumpTo(gridPos);
+        }
+    }
+
+    jumpTo(endPos) {
+        const startPos = getGridPosition(this.excited);
+        const isValid = this.isValidMove(startPos, endPos);
+
+        if (!isValid) {
+            this.calm();
+        }
+    }
+
+    isValidMove(startPos, endPos) {
+        const middle = {
+            x: (startPos.x - endPos.x) / 2 + startPos.x,
+            y: (startPos.y - endPos.y) / 2 + startPos.y,
+        };
+
+        if (this.grid.isEmpty(middle)) {
+            return false;
+        }
+
+        if (this.grid.isEmpty(endPos)) {
+            return true;
+        }
+
+        return false;
     }
 
     addPeg({ x, y }) {
@@ -114,28 +152,44 @@ class GameState extends Phaser.State {
         this.game.sound.play('error');
     }
 
-    hasValidMoves({x, y}) {
-        let validMoves = 0;
-        const grid = this.grid;
+    hasValidMoves({ x, y }) {
+        const jumpDist = 2;
+        const start = { x, y };
+        const ends = [
+            {
+                x,
+                y: y + jumpDist,
+            },
+            {
+                x,
+                y: y - jumpDist,
+            },
+            {
+                x: x - jumpDist,
+                y: y - jumpDist,
+            },
+            {
+                x: x + jumpDist,
+                y: y + jumpDist,
+            },
+            {
+                x: x + jumpDist,
+                y,
+            },
+            {
+                x: x - jumpDist,
+                y,
+            },
+        ];
 
-        // check nw
-        if (!grid.isEmpty(x - 1, y - 1)) {
-            if (grid.isEmpty(x - 2, y - 2)) {
-                validMoves++;
+        for (let i in ends) {
+            const end = ends[i];
+            if (this.isValidMove(start, end)) {
+                return true;
             }
         }
 
-        // check w
-
-        // check sw
-
-        // check se
-
-        // check e
-
-        // check ne
-
-        return validMoves > 0;
+        return false;
     }
 
     hasPeg(x, y) {

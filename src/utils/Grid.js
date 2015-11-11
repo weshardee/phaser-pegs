@@ -38,7 +38,7 @@ export default class Grid {
         };
     }
 
-    getPosition(x, y) {
+    getPosition({ x, y }) {
         const row = this.rows[y];
         if (row === undefined) {
             return undefined;
@@ -56,7 +56,7 @@ export default class Grid {
         }
     }
 
-    isEmpty(x, y) {
-        return this.getPosition(x, y) === EMPTY;
+    isEmpty({ x, y }) {
+        return this.getPosition({ x, y }) === EMPTY;
     }
 }
