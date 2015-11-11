@@ -32,6 +32,7 @@ class GameState extends Phaser.State {
         this.boardGroup = this.game.add.group(undefined, 'board');
         this.tilesGroup = this.game.add.group(this.boardGroup, 'tiles');
         this.pegsGroup = this.game.add.group(this.boardGroup, 'pegs');
+        this.deadPegsGroup = this.game.add.group(this.boardGroup, 'deadPegs');
 
         // populate board
         for (const { x, y } of this.grid) {
@@ -110,15 +111,13 @@ class GameState extends Phaser.State {
             .start()
         ;
 
-        const deathTween = this.game.tweens.create(sprite.scale)
+        this.game.tweens.create(sprite.scale)
             .to(scale, deathDuration)
             .start()
         ;
 
-        deathTween.onComplete.add(() => {
-            console.log('killed');
-            this.pegsGroup.remove(sprite)
-        });
+        this.pegsGroup.remove(sprite);
+        this.deadPegsGroup.add(sprite);
     }
 
     isValidMove(startPos, endPos) {
