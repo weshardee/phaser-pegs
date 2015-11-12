@@ -16,6 +16,7 @@ import {
     DEATH_SCALE,
     DEATH_ALPHA,
     BUTTON_URI,
+    JUMP_DURATION,
 } from '../utils/constants';
 
 const TILE_URI = 'images/tiles.png';
@@ -102,9 +103,14 @@ class GameState extends Phaser.State {
         this.grid.empty(startPos);
         this.grid.empty(middle);
 
+        // move the sprite
         const endGamePos = getGamePosition(endPos.x, endPos.y);
-        this.excited.x = endGamePos.x;
-        this.excited.y = endGamePos.y;
+
+        this.game.tweens.create(this.excited)
+            .to(endGamePos, JUMP_DURATION, Phaser.Easing.Back.InOut)
+            .start()
+        ;
+
 
         // clear excited state
         this.excitedTween.loop(false);

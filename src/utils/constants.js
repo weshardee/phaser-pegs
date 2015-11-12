@@ -19,3 +19,5 @@ export const DEATH_SCALE = {
     x: 0,
     y: 0,
 };
+
+export const JUMP_DURATION = 200;
