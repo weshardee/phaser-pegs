@@ -42,18 +42,11 @@ class GameState extends Phaser.State {
         this.pegsGroup = this.game.add.group(this.boardGroup, 'pegs');
         this.deadPegsGroup = this.game.add.group(this.boardGroup, 'deadPegs');
 
-        // populate board
+        // build board
         for (const { x, y } of this.grid) {
             const gamePosition = getGamePosition(x, y);
             this.addTile(gamePosition);
-
-            if (y > 0) {
-                this.addPeg(gamePosition);
-                this.grid.fill({ x, y });
-            }
         }
-
-        this.grid.log();
 
         // center board
         this.boardGroup.x = MIDDLE;
@@ -61,6 +54,20 @@ class GameState extends Phaser.State {
 
         // add reset button
         this.game.add.button(0, 0, 'reset', this.reset, this);
+
+        // populate board
+        this.populate({ x: 0, y: 0 });
+    }
+
+    populate(emptyPos) {
+        // populate board
+        for (const { x, y } of this.grid) {
+            const gamePosition = getGamePosition(x, y);
+            if (x !== emptyPos.x || y !== emptyPos.y) {
+                this.addPeg(gamePosition);
+                this.grid.fill({ x, y });
+            }
+        }
     }
 
     reset() {
