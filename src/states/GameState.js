@@ -7,6 +7,7 @@ import {
 
 import {
     AUDIO_ERROR_URI,
+    AUDIO_JUMP_URI,
     BOARD_SIZE,
     MIDDLE,
     NUM_PEG_TYPES,
@@ -22,6 +23,7 @@ const PEGS_URI = 'images/pegs.png';
 
 class GameState extends Phaser.State {
     preload() {
+        this.game.load.audio('jump', AUDIO_JUMP_URI);
         this.game.load.audio('error', AUDIO_ERROR_URI);
         this.game.load.spritesheet('tiles', TILE_URI, 65, 89, NUM_TILE_TYPES);
         this.game.load.spritesheet('pegs', PEGS_URI, 40, 66, NUM_PEG_TYPES);
@@ -86,6 +88,8 @@ class GameState extends Phaser.State {
     }
 
     jumpTo(endPos) {
+        this.game.sound.play('jump');
+
         const startPos = getGridPosition(this.excited);
         const isValid = this.isValidMove(startPos, endPos);
 
