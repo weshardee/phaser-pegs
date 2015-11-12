@@ -1,6 +1,6 @@
 export const AUDIO_ERROR_URI = 'sounds/error.mp3';
 export const AUDIO_JUMP_URI = 'sounds/jump.mp3';
-export const BUTTON_URI = 'images/button.png';
+export const RESET_URI = 'images/return.png';
 
 export const BOARD_SIZE = 5;
 export const EMPTY = 0;

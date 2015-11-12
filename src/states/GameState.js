@@ -15,7 +15,7 @@ import {
     DEATH_DURATION,
     DEATH_SCALE,
     DEATH_ALPHA,
-    BUTTON_URI,
+    RESET_URI,
     JUMP_DURATION,
 } from '../utils/constants';
 
@@ -28,7 +28,7 @@ class GameState extends Phaser.State {
         this.game.load.audio('error', AUDIO_ERROR_URI);
         this.game.load.spritesheet('tiles', TILE_URI, 65, 89, NUM_TILE_TYPES);
         this.game.load.spritesheet('pegs', PEGS_URI, 40, 66, NUM_PEG_TYPES);
-        this.game.load.spritesheet('button', BUTTON_URI, 190, 49);
+        this.game.load.image('reset', RESET_URI, 190, 49);
     }
 
     create() {
@@ -60,10 +60,7 @@ class GameState extends Phaser.State {
         this.boardGroup.y = (MIDDLE - this.boardGroup.height / 2) * 1.6;
 
         // add reset button
-        const resetBtn = this.game.add.button(0, 0, 'button', this.reset, this, 1, 0, 2, 3);
-        resetBtn.anchor.x = 0.5;
-        resetBtn.x = MIDDLE;
-        resetBtn.y = 20;
+        this.game.add.button(0, 0, 'reset', this.reset, this);
     }
 
     reset() {
