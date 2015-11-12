@@ -35,13 +35,11 @@ function isProduction() {
  * Logs the current build mode on the console.
  */
 function logBuildMode() {
-
     if (isProduction()) {
         gutil.log(gutil.colors.green('Running production build...'));
     } else {
         gutil.log(gutil.colors.yellow('Running development build...'));
     }
-
 }
 
 /**
@@ -72,7 +70,6 @@ function copyStatic() {
  * This way you can call 'npm update', get the lastest Phaser version and use it on your project with ease.
  */
 function copyPhaser() {
-
     var srcList = ['phaser.min.js'];
 
     if (!isProduction()) {
@@ -85,7 +82,6 @@ function copyPhaser() {
 
     return gulp.src(srcList)
         .pipe(gulp.dest(SCRIPTS_PATH));
-
 }
 
 /**
@@ -98,16 +94,15 @@ function copyPhaser() {
  * but have different task dependencies.
  */
 function build() {
-
     var sourcemapPath = SCRIPTS_PATH + '/' + OUTPUT_FILE + '.map';
     logBuildMode();
 
     return browserify({
         entries: ENTRY_FILE,
-        debug: true
+        debug: true,
     })
     .transform(babelify)
-    .bundle().on('error', function(error){
+    .bundle().on('error', function(error) {
         gutil.beep();
         gutil.log(gutil.colors.red('[Build Error]', error.message));
         this.emit('end');
@@ -117,7 +112,6 @@ function build() {
     .pipe(buffer())
     .pipe(gulpif(isProduction(), uglify()))
     .pipe(gulp.dest(SCRIPTS_PATH));
-
 }
 
 /**
@@ -125,12 +119,11 @@ function build() {
  * Watches for file changes in the 'src' folder.
  */
 function serve() {
-
     var options = {
         server: {
-            baseDir: BUILD_PATH
+            baseDir: BUILD_PATH,
         },
-        open: false // Change it to true if you wish to allow Browsersync to open a browser window.
+        open: false, // Change it to true if you wish to allow Browsersync to open a browser window.
     };
 
     browserSync(options);
@@ -142,9 +135,7 @@ function serve() {
     gulp.watch(STATIC_PATH + '/**/*', ['watch-static']).on('change', function() {
         keepFiles = true;
     });
-
 }
-
 
 gulp.task('cleanBuild', cleanBuild);
 gulp.task('copyStatic', ['cleanBuild'], copyStatic);
