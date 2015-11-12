@@ -10,6 +10,8 @@ var exorcist = require('exorcist');
 var babelify = require('babelify');
 var browserify = require('browserify');
 var browserSync = require('browser-sync');
+var ghPages = require('gulp-gh-pages');
+var runSequence = require('run-sequence');
 
 /**
  * Using different folders/file names? Change these constants:
@@ -137,6 +139,18 @@ function serve() {
     });
 }
 
+function deploy() {
+    return gulp.src(BUILD_PATH + '/**/*')
+        .pipe(ghPages());
+}
+
+function buildProd(cb) {
+    argv.production = true;
+    runSequence('build', cb);
+}
+
+gulp.task('deploy', ['buildProd'], deploy);
+gulp.task('buildProd', ['cleanBuild'], buildProd);
 gulp.task('cleanBuild', cleanBuild);
 gulp.task('copyStatic', ['cleanBuild'], copyStatic);
 gulp.task('copyPhaser', ['copyStatic'], copyPhaser);
