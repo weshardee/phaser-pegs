@@ -56,10 +56,12 @@ class GameState extends Phaser.State {
         this.game.add.button(0, 0, 'reset', this.reset, this);
 
         // populate board
-        this.populate({ x: 0, y: 0 });
+        this.isPopulated = false;
     }
 
     populate(emptyPos) {
+        this.isPopulated = true;
+
         // populate board
         for (const { x, y } of this.grid) {
             const gamePosition = getGamePosition(x, y);
@@ -71,7 +73,11 @@ class GameState extends Phaser.State {
     }
 
     reset() {
+        this.isPopulated = false;
         this.game.state.start('GameState', true, false);
+        this.pegsGroup.children.forEach(sprite => {
+            sprite.kill();
+        });
     }
 
     addTile({ x, y }) {
@@ -89,6 +95,8 @@ class GameState extends Phaser.State {
 
         if (this.excited) {
             this.jumpTo(gridPos);
+        } else if (!this.isPopulated) {
+            this.populate(gridPos);
         }
     }
 
