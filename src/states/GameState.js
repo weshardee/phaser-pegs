@@ -6,6 +6,7 @@ import {
 } from '../utils/position';
 
 import {
+    FADE_DURATION,
     GAME_SIZE,
     AUDIO_ERROR_URI,
     AUDIO_JUMP_URI,
@@ -59,6 +60,14 @@ class GameState extends Phaser.State {
 
         // populate board
         this.isPopulated = false;
+
+        // add banner
+        const textStyle = {
+            fill: '#ffffff',
+        };
+        this.endMessage = this.game.add.text(this.world.width - 20, 14, '', textStyle);
+        this.endMessage.anchor.x = 1;
+        this.endMessage.alpha = 0;
     }
 
     populate(emptyPos) {
@@ -84,6 +93,10 @@ class GameState extends Phaser.State {
     reset() {
         this.isPopulated = false;
         this.empty();
+
+        this.game.tweens.create(this.endMessage)
+            .to({ alpha: 0 }, FADE_DURATION)
+            .start();
     }
 
     addTile({ x, y }) {
@@ -129,7 +142,6 @@ class GameState extends Phaser.State {
             .start()
         ;
 
-
         // clear excited state
         this.excitedTween.loop(false);
         this.excited = null;
@@ -137,12 +149,9 @@ class GameState extends Phaser.State {
         // kill the jumped peg
         const middlePeg = this.getPegAt(middle);
         this.kill(middlePeg);
-
-        this.grid.log();
     }
 
     kill(sprite) {
-        console.log('kill', sprite);
         this.game.tweens.create(sprite)
             .to({ alpha: DEATH_ALPHA }, DEATH_DURATION)
             .start()
@@ -154,6 +163,7 @@ class GameState extends Phaser.State {
 
         death.onComplete.add(() => {
             sprite.destroy();
+            this.checkPegs();
         });
 
         death.start();
@@ -259,6 +269,42 @@ class GameState extends Phaser.State {
             .start()
         ;
         this.game.sound.play('error');
+    }
+
+    checkPegs() {
+        this.pegsGroup.forEach(sprite => {
+            const pos = getGridPosition(sprite);
+            sprite.alive = this.hasValidMoves(pos);
+        });
+
+        if (this.pegsGroup.getFirstAlive() === null) {
+            this.end();
+        }
+    }
+
+    end() {
+        const numRemainingPegs = this.pegsGroup.countDead();
+
+        if (numRemainingPegs === 0) {
+            return;
+        }
+
+        const MESSAGES = [
+            'Just Plain Eg-no-ra-moose',
+            'You\'re a Genius',
+            'You\'re Pretty Smart',
+            'Just Plain Dumb',
+        ];
+
+        this.endMessage.text = MESSAGES[0];
+
+        if (numRemainingPegs < 4) {
+            this.endMessage.text = MESSAGES[numRemainingPegs];
+        }
+
+        this.game.tweens.create(this.endMessage)
+            .to({ alpha: 1 }, FADE_DURATION)
+            .start();
     }
 
     hasValidMoves({ x, y }) {

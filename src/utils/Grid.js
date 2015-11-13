@@ -13,8 +13,6 @@ export default class Grid {
             row.fill(EMPTY);
             this.rows[y] = row;
         }
-
-        this.log();
     }
 
     [Symbol.iterator]() {
