@@ -6,6 +6,7 @@ import {
 } from '../utils/position';
 
 import {
+    GAME_SIZE,
     AUDIO_ERROR_URI,
     AUDIO_JUMP_URI,
     BOARD_SIZE,
@@ -17,6 +18,7 @@ import {
     DEATH_ALPHA,
     RESET_URI,
     JUMP_DURATION,
+    FALL_DURATION,
 } from '../utils/constants';
 
 const TILE_URI = 'images/tiles.png';
@@ -72,12 +74,16 @@ class GameState extends Phaser.State {
         }
     }
 
+    empty() {
+        this.isPopulated = false;
+        this.pegsGroup.children.slice().forEach(sprite => {
+            this.kill(sprite);
+        });
+    }
+
     reset() {
         this.isPopulated = false;
-        this.game.state.start('GameState', true, false);
-        this.pegsGroup.children.forEach(sprite => {
-            sprite.kill();
-        });
+        this.empty();
     }
 
     addTile({ x, y }) {
@@ -136,15 +142,21 @@ class GameState extends Phaser.State {
     }
 
     kill(sprite) {
+        console.log('kill', sprite);
         this.game.tweens.create(sprite)
             .to({ alpha: DEATH_ALPHA }, DEATH_DURATION)
             .start()
         ;
 
-        this.game.tweens.create(sprite.scale)
+        const death = this.game.tweens.create(sprite.scale)
             .to(DEATH_SCALE, DEATH_DURATION)
-            .start()
         ;
+
+        death.onComplete.add(() => {
+            sprite.destroy();
+        });
+
+        death.start();
 
         this.pegsGroup.remove(sprite);
         this.deadPegsGroup.add(sprite);
@@ -187,6 +199,13 @@ class GameState extends Phaser.State {
     addPeg({ x, y }) {
         const peg = new Peg(this.game, this.pegsGroup, x, y);
         peg.sprite.events.onInputUp.add(this.onPegClick, this);
+
+        this.game.tweens.create(peg.sprite)
+            .from({ y: '-' + GAME_SIZE }, FALL_DURATION, Phaser.Easing.Bounce.Out)
+            .delay(Math.random() * 200)
+            .start()
+        ;
+
         return peg;
     }
 
