@@ -4,7 +4,8 @@ const SHAKE_DISTANCE = 5;
 const EXCITEMENT_SWING_ROTATION = 0.05;
 const EXCITEMENT_SWING_DURATION = 90;
 
-export const FADE_DURATION = 200;
+const FADE_DURATION = 200;
+const SLIDE_DURATION = 200;
 
 export const AUDIO_ERROR_ID = 'error';
 
@@ -44,4 +45,11 @@ export function fadeOut(sprite) {
     sprite.game.tweens.create(sprite)
         .to({ alpha: 0 }, FADE_DURATION)
         .start();
+}
+
+export function slide(sprite, position) {
+    sprite.game.tweens.create(sprite)
+        .to(position, SLIDE_DURATION, Phaser.Easing.Back.InOut)
+        .start()
+    ;
 }

@@ -12,11 +12,11 @@ import {
     excite,
     fadeIn,
     fadeOut,
+    slide,
     AUDIO_ERROR_ID,
 } from '../utils/animations';
 
 import {
-    FADE_DURATION,
     GAME_SIZE,
     AUDIO_ERROR_URI,
     AUDIO_JUMP_URI,
@@ -28,7 +28,6 @@ import {
     DEATH_SCALE,
     DEATH_ALPHA,
     RESET_URI,
-    JUMP_DURATION,
     FALL_DURATION,
     END_MESSAGES,
 } from '../utils/constants';
@@ -128,17 +127,13 @@ class GameState extends Phaser.State {
         }
 
         const middle = this.grid.getMiddle(startPos, endPos);
-        this.grid.fill(endPos);
         this.grid.empty(startPos);
         this.grid.empty(middle);
+        this.grid.fill(endPos);
 
         // move the sprite
         const endGamePos = getGamePosition(endPos.x, endPos.y);
-
-        this.game.tweens.create(this.excited)
-            .to(endGamePos, JUMP_DURATION, Phaser.Easing.Back.InOut)
-            .start()
-        ;
+        slide(this.excited, endGamePos);
 
         // clear excited state
         this.excitedTween.loop(false);
