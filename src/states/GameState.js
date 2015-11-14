@@ -9,6 +9,7 @@ import {
 
 import {
     shake,
+    excite,
     AUDIO_ERROR_ID,
 } from '../utils/animations.js'
 
@@ -209,18 +210,8 @@ class GameState extends Phaser.State {
     }
 
     excite(sprite) {
-        const swing = 0.05;
-        const swingDuration = 90;
-        const tween = this.game.tweens.create(sprite)
-            .to({ rotation: swing }, swingDuration, Phaser.Easing.Back.Out)
-            .to({ rotation: 0 }, swingDuration, Phaser.Easing.Linear.None)
-            .to({ rotation: -swing }, swingDuration, Phaser.Easing.Back.Out)
-            .to({ rotation: 0 }, swingDuration, Phaser.Easing.Linear.None)
-            .loop(true)
-            .start()
-        ;
         this.excited = sprite;
-        this.excitedTween = tween;
+        this.excitedTween = excite(sprite);
     }
 
     disappoint() {
