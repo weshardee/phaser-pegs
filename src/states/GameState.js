@@ -12,12 +12,12 @@ import {
     excite,
     fadeIn,
     fadeOut,
+    fallIn,
     slide,
     AUDIO_ERROR_ID,
 } from '../utils/animations';
 
 import {
-    GAME_SIZE,
     AUDIO_ERROR_URI,
     AUDIO_JUMP_URI,
     BOARD_SIZE,
@@ -28,7 +28,6 @@ import {
     DEATH_SCALE,
     DEATH_ALPHA,
     RESET_URI,
-    FALL_DURATION,
     END_MESSAGES,
 } from '../utils/constants';
 
@@ -179,13 +178,7 @@ class GameState extends Phaser.State {
     addPeg({ x, y }) {
         const peg = new Peg(this.game, this.pegsGroup, x, y);
         peg.sprite.events.onInputUp.add(this.onPegClick, this);
-
-        this.game.tweens.create(peg.sprite)
-            .from({ y: '-' + GAME_SIZE }, FALL_DURATION, Phaser.Easing.Bounce.Out)
-            .delay(Math.random() * 200)
-            .start()
-        ;
-
+        fallIn(peg.sprite);
         return peg;
     }
 

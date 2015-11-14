@@ -1,3 +1,7 @@
+import {
+    GAME_SIZE,
+} from './constants';
+
 const SHAKE_DURATION = 100;
 const SHAKE_DISTANCE = 5;
 
@@ -6,6 +10,10 @@ const EXCITEMENT_SWING_DURATION = 90;
 
 const FADE_DURATION = 200;
 const SLIDE_DURATION = 200;
+
+const FALL_DURATION = 600;
+const FALL_MAX_DELAY = 200;
+const FALL_EASING = Phaser.Easing.Bounce.Out;
 
 export const AUDIO_ERROR_ID = 'error';
 
@@ -50,6 +58,18 @@ export function fadeOut(sprite) {
 export function slide(sprite, position) {
     sprite.game.tweens.create(sprite)
         .to(position, SLIDE_DURATION, Phaser.Easing.Back.InOut)
+        .start()
+    ;
+}
+
+export function fallIn(sprite) {
+    const { game } = sprite;
+    const delay = Math.random() * FALL_MAX_DELAY;
+    const props = { y: '-' + game.height };
+
+    game.tweens.create(sprite)
+        .from(props, FALL_DURATION, FALL_EASING)
+        .delay(delay)
         .start()
     ;
 }
