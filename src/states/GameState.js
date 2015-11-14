@@ -33,6 +33,10 @@ import {
 
 const TILE_URI = 'images/tiles.png';
 const PEGS_URI = 'images/pegs.png';
+const BG_COLOR = 0x333333;
+const TEXT_STYLE = {
+    fill: '#ffffff',
+};
 
 class GameState extends Phaser.State {
     preload() {
@@ -44,7 +48,7 @@ class GameState extends Phaser.State {
     }
 
     create() {
-        this.game.stage.backgroundColor = 0x333333;
+        this.game.stage.backgroundColor = BG_COLOR;
 
         // initialize groups for tiles and pegs
         this.boardGroup = this.game.add.group(undefined, 'board');
@@ -70,10 +74,7 @@ class GameState extends Phaser.State {
         this.isPopulated = false;
 
         // add banner
-        const textStyle = {
-            fill: '#ffffff',
-        };
-        this.endMessage = this.game.add.text(this.world.width - 20, 14, '', textStyle);
+        this.endMessage = this.game.add.text(this.world.width - 20, 14, '', TEXT_STYLE);
         this.endMessage.anchor.x = 1;
         this.endMessage.alpha = 0;
     }
