@@ -89,17 +89,12 @@ class GameState extends Phaser.State {
         }
     }
 
-    empty() {
+    reset() {
         this.isPopulated = false;
+        this.grid.emptyAll();
         this.pegsGroup.children.slice().forEach(sprite => {
             this.kill(sprite);
         });
-    }
-
-    reset() {
-        this.isPopulated = false;
-        this.empty();
-
         this.game.tweens.create(this.endMessage)
             .to({ alpha: 0 }, FADE_DURATION)
             .start();
