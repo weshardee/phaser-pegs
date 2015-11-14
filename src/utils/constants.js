@@ -24,3 +24,10 @@ export const DEATH_SCALE = {
 };
 
 export const JUMP_DURATION = 200;
+
+export const END_MESSAGES = [
+    'Just Plain Eg-no-ra-moose',
+    'You\'re a Genius',
+    'You\'re Pretty Smart',
+    'Just Plain Dumb',
+];

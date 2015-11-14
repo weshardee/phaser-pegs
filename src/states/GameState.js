@@ -28,6 +28,7 @@ import {
     RESET_URI,
     JUMP_DURATION,
     FALL_DURATION,
+    END_MESSAGES,
 } from '../utils/constants';
 
 const TILE_URI = 'images/tiles.png';
@@ -238,17 +239,10 @@ class GameState extends Phaser.State {
             return;
         }
 
-        const MESSAGES = [
-            'Just Plain Eg-no-ra-moose',
-            'You\'re a Genius',
-            'You\'re Pretty Smart',
-            'Just Plain Dumb',
-        ];
-
-        this.endMessage.text = MESSAGES[0];
+        this.endMessage.text = END_MESSAGES[0];
 
         if (numRemainingPegs < 4) {
-            this.endMessage.text = MESSAGES[numRemainingPegs];
+            this.endMessage.text = END_MESSAGES[numRemainingPegs];
         }
 
         this.game.tweens.create(this.endMessage)
