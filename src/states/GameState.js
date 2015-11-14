@@ -236,27 +236,6 @@ class GameState extends Phaser.State {
 
         fadeIn(this.endMessage);
     }
-
-    hasPeg(x, y) {
-        if (this.isOutOfBounds(x, y)) {
-            return false;
-        }
-    }
-
-    getId(x, y) {
-        const row = this.grid[y];
-
-        if (row === undefined) {
-            return true;
-        }
-
-        const pos = row[x];
-
-        if (pos === undefined) {
-            return true;
-        }
-    }
-
 }
 
 export default GameState;
