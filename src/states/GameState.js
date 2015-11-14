@@ -14,10 +14,10 @@ import {
     fadeOut,
     fallIn,
     slide,
-    AUDIO_ERROR_ID,
 } from '../utils/animations';
 
 import {
+    AUDIO_ERROR_ID,
     AUDIO_ERROR_URI,
     AUDIO_JUMP_URI,
     BOARD_SIZE,

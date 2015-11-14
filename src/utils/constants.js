@@ -1,3 +1,4 @@
+export const AUDIO_ERROR_ID = 'error';
 export const AUDIO_ERROR_URI = 'sounds/error.mp3';
 export const AUDIO_JUMP_URI = 'sounds/jump.mp3';
 export const RESET_URI = 'images/return.png';

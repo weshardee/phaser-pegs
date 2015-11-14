@@ -1,5 +1,5 @@
 import {
-    GAME_SIZE,
+    AUDIO_ERROR_ID,
 } from './constants';
 
 const SHAKE_DURATION = 100;
@@ -14,8 +14,6 @@ const SLIDE_DURATION = 200;
 const FALL_DURATION = 600;
 const FALL_MAX_DELAY = 200;
 const FALL_EASING = Phaser.Easing.Bounce.Out;
-
-export const AUDIO_ERROR_ID = 'error';
 
 export function shake(sprite) {
     const { game, x } = sprite;
