@@ -4,6 +4,8 @@ const SHAKE_DISTANCE = 5;
 const EXCITEMENT_SWING_ROTATION = 0.05;
 const EXCITEMENT_SWING_DURATION = 90;
 
+export const FADE_DURATION = 200;
+
 export const AUDIO_ERROR_ID = 'error';
 
 export function shake(sprite) {
@@ -30,5 +32,16 @@ export function excite(sprite) {
         .loop(true)
         .start()
     ;
+}
 
+export function fadeIn(sprite) {
+    sprite.game.tweens.create(sprite)
+        .to({ alpha: 1 }, FADE_DURATION)
+        .start();
+}
+
+export function fadeOut(sprite) {
+    sprite.game.tweens.create(sprite)
+        .to({ alpha: 0 }, FADE_DURATION)
+        .start();
 }

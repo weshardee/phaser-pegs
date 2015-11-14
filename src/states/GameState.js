@@ -11,6 +11,7 @@ import {
     shake,
     excite,
     fadeIn,
+    fadeOut,
     AUDIO_ERROR_ID,
 } from '../utils/animations';
 
@@ -98,9 +99,7 @@ class GameState extends Phaser.State {
         this.pegsGroup.children.slice().forEach(sprite => {
             this.kill(sprite);
         });
-        this.game.tweens.create(this.endMessage)
-            .to({ alpha: 0 }, FADE_DURATION)
-            .start();
+        fadeOut(this.endMessage);
     }
 
     addTile({ x, y }) {
