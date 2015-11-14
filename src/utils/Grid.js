@@ -49,6 +49,12 @@ export default class Grid {
         this.rows[y][x] = EMPTY;
     }
 
+    emptyAll() {
+        for (const { x, y } of this) {
+            this.empty({x, y});
+        }
+    }
+
     fill({ x, y }) {
         this.rows[y][x] = FULL;
     }
