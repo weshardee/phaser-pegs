@@ -1,5 +1,6 @@
 import Grid from '../utils/Grid';
 import Peg from '../objects/Peg';
+import Tile from '../objects/Tile';
 
 import {
     getGamePosition,
@@ -43,8 +44,6 @@ class GameState extends Phaser.State {
     create() {
         this.game.stage.backgroundColor = 0x333333;
 
-        this.grid = new Grid(BOARD_SIZE);
-
         // initialize groups for tiles and pegs
         this.boardGroup = this.game.add.group(undefined, 'board');
         this.tilesGroup = this.game.add.group(this.boardGroup, 'tiles');
@@ -52,6 +51,7 @@ class GameState extends Phaser.State {
         this.deadPegsGroup = this.game.add.group(this.boardGroup, 'deadPegs');
 
         // build board
+        this.grid = new Grid(BOARD_SIZE);
         for (const { x, y } of this.grid) {
             const gamePosition = getGamePosition(x, y);
             this.addTile(gamePosition);
@@ -101,13 +101,8 @@ class GameState extends Phaser.State {
     }
 
     addTile({ x, y }) {
-        const tile = this.game.add.sprite(x, y, 'tiles', 0, this.tilesGroup);
-
-        tile.anchor.x = 0.5;
-        tile.anchor.y = 0.375;
-
-        tile.inputEnabled = true;
-        tile.events.onInputUp.add(this.onTileClick, this);
+        const tile = new Tile(this.game, x, y, this.onTileClick, this);
+        this.tilesGroup.add(tile);
     }
 
     onTileClick(sprite) {
