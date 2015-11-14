@@ -119,13 +119,13 @@ class GameState extends Phaser.State {
         this.game.sound.play('jump');
 
         const startPos = getGridPosition(this.excited);
-        const isValid = this.isValidMove(startPos, endPos);
+        const isValid = this.grid.isValidMove(startPos, endPos);
 
         if (!isValid) {
             return this.disappoint();
         }
 
-        const middle = this.getMiddle(startPos, endPos);
+        const middle = this.grid.getMiddle(startPos, endPos);
         this.grid.fill(endPos);
         this.grid.empty(startPos);
         this.grid.empty(middle);
@@ -168,20 +168,6 @@ class GameState extends Phaser.State {
         this.deadPegsGroup.add(sprite);
     }
 
-    isValidMove(startPos, endPos) {
-        const middle = this.getMiddle(startPos, endPos);
-
-        if (this.grid.isEmpty(middle)) {
-            return false;
-        }
-
-        if (this.grid.isEmpty(endPos)) {
-            return middle;
-        }
-
-        return false;
-    }
-
     getPegAt({ x, y }) {
         const peg = this.pegsGroup.children.find(sprite => {
             const gridPos = getGridPosition(sprite);
@@ -191,15 +177,6 @@ class GameState extends Phaser.State {
             return false;
         });
         return peg;
-    }
-
-    getMiddle(startPos, endPos) {
-        const deltaX = startPos.x - endPos.x;
-        const deltaY = startPos.y - endPos.y;
-        return {
-            x: deltaX / 2 + endPos.x,
-            y: deltaY / 2 + endPos.y,
-        };
     }
 
     addPeg({ x, y }) {
@@ -223,7 +200,7 @@ class GameState extends Phaser.State {
         // figure out pegboard position of click
         const pos = getGridPosition(sprite);
 
-        if (this.hasValidMoves(pos)) {
+        if (this.grid.hasValidMoves(pos)) {
             this.excite(sprite);
             this.selected = sprite;
         } else {
@@ -255,7 +232,7 @@ class GameState extends Phaser.State {
     checkPegs() {
         this.pegsGroup.forEach(sprite => {
             const pos = getGridPosition(sprite);
-            sprite.alive = this.hasValidMoves(pos);
+            sprite.alive = this.grid.hasValidMoves(pos);
         });
 
         if (this.pegsGroup.getFirstAlive() === null) {
@@ -286,46 +263,6 @@ class GameState extends Phaser.State {
         this.game.tweens.create(this.endMessage)
             .to({ alpha: 1 }, FADE_DURATION)
             .start();
-    }
-
-    hasValidMoves({ x, y }) {
-        const jumpDist = 2;
-        const start = { x, y };
-        const ends = [
-            {
-                x,
-                y: y + jumpDist,
-            },
-            {
-                x,
-                y: y - jumpDist,
-            },
-            {
-                x: x - jumpDist,
-                y: y - jumpDist,
-            },
-            {
-                x: x + jumpDist,
-                y: y + jumpDist,
-            },
-            {
-                x: x + jumpDist,
-                y,
-            },
-            {
-                x: x - jumpDist,
-                y,
-            },
-        ];
-
-        for (let i in ends) {
-            const end = ends[i];
-            if (this.isValidMove(start, end)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     hasPeg(x, y) {

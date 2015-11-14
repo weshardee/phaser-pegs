@@ -68,4 +68,67 @@ export default class Grid {
     isEmpty({ x, y }) {
         return this.getPosition({ x, y }) === EMPTY;
     }
+
+    hasValidMoves({ x, y }) {
+        const jumpDist = 2;
+        const start = { x, y };
+        const ends = [
+            {
+                x,
+                y: y + jumpDist,
+            },
+            {
+                x,
+                y: y - jumpDist,
+            },
+            {
+                x: x - jumpDist,
+                y: y - jumpDist,
+            },
+            {
+                x: x + jumpDist,
+                y: y + jumpDist,
+            },
+            {
+                x: x + jumpDist,
+                y,
+            },
+            {
+                x: x - jumpDist,
+                y,
+            },
+        ];
+
+        for (let i in ends) {
+            const end = ends[i];
+            if (this.isValidMove(start, end)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    isValidMove(startPos, endPos) {
+        const middle = this.getMiddle(startPos, endPos);
+
+        if (this.isEmpty(middle)) {
+            return false;
+        }
+
+        if (this.isEmpty(endPos)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    getMiddle(startPos, endPos) {
+        const deltaX = startPos.x - endPos.x;
+        const deltaY = startPos.y - endPos.y;
+        return {
+            x: deltaX / 2 + endPos.x,
+            y: deltaY / 2 + endPos.y,
+        };
+    }
 }
