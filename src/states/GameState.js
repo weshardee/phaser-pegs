@@ -11,7 +11,7 @@ import {
     shake,
     excite,
     AUDIO_ERROR_ID,
-} from '../utils/animations.js'
+} from '../utils/animations';
 
 import {
     FADE_DURATION,
