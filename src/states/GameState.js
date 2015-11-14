@@ -10,6 +10,7 @@ import {
 import {
     shake,
     excite,
+    fadeIn,
     AUDIO_ERROR_ID,
 } from '../utils/animations';
 
@@ -245,9 +246,7 @@ class GameState extends Phaser.State {
             this.endMessage.text = END_MESSAGES[numRemainingPegs];
         }
 
-        this.game.tweens.create(this.endMessage)
-            .to({ alpha: 1 }, FADE_DURATION)
-            .start();
+        fadeIn(this.endMessage);
     }
 
     hasPeg(x, y) {
