@@ -1,9 +1,15 @@
 import Grid from '../utils/Grid';
 import Peg from '../objects/Peg';
+
 import {
     getGamePosition,
     getGridPosition,
 } from '../utils/position';
+
+import {
+    shake,
+    AUDIO_ERROR_ID,
+} from '../utils/animations.js'
 
 import {
     FADE_DURATION,
@@ -28,7 +34,7 @@ const PEGS_URI = 'images/pegs.png';
 class GameState extends Phaser.State {
     preload() {
         this.game.load.audio('jump', AUDIO_JUMP_URI);
-        this.game.load.audio('error', AUDIO_ERROR_URI);
+        this.game.load.audio(AUDIO_ERROR_ID, AUDIO_ERROR_URI);
         this.game.load.spritesheet('tiles', TILE_URI, 65, 89, NUM_TILE_TYPES);
         this.game.load.spritesheet('pegs', PEGS_URI, 40, 66, NUM_PEG_TYPES);
         this.game.load.image('reset', RESET_URI, 190, 49);
@@ -231,7 +237,7 @@ class GameState extends Phaser.State {
             this.excite(sprite);
             this.selected = sprite;
         } else {
-            this.shake(sprite);
+            shake(sprite);
         }
     }
 
@@ -251,24 +257,9 @@ class GameState extends Phaser.State {
     }
 
     disappoint() {
-        this.shake(this.excited);
+        shake(this.excited);
         this.excitedTween.loop(false);
         this.excited = null;
-    }
-
-    shake(sprite) {
-        const duration = 100;
-        const dist = 5;
-        const start = { x: sprite.x };
-        const right = { x: sprite.x + dist };
-        const left = { x: sprite.x - dist };
-        this.game.tweens.create(sprite)
-            .to(left, duration / 4)
-            .to(right, duration / 2)
-            .to(start, duration / 4)
-            .start()
-        ;
-        this.game.sound.play('error');
     }
 
     checkPegs() {
