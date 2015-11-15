@@ -53,6 +53,7 @@ class GameState extends Phaser.State {
         this.onUpdate();
 
         this.game.stage.backgroundColor = BG_COLOR;
+        this.isPopulated = false;
 
         // initialize groups for tiles and pegs
         this.boardGroup = this.game.add.group(undefined, 'board');
@@ -63,15 +64,8 @@ class GameState extends Phaser.State {
         // build board
         redux.dispatch(gridActions.createGrid(BOARD_SIZE));
 
-        // center board
-        this.boardGroup.x = MIDDLE;
-        this.boardGroup.y = (MIDDLE - this.boardGroup.height / 2) * 1.6;
-
         // add reset button
         this.game.add.button(0, 0, 'reset', this.reset, this);
-
-        // populate board
-        this.isPopulated = false;
 
         // add banner
         this.endMessage = this.game.add.text(this.world.width - 20, 14, '', TEXT_STYLE);
@@ -99,6 +93,10 @@ class GameState extends Phaser.State {
             const gamePosition = getGamePosition(x, y);
             this.addTile(gamePosition);
         }
+
+        // center board
+        this.boardGroup.x = MIDDLE;
+        this.boardGroup.y = (MIDDLE - this.boardGroup.height / 2) * 1.6;
     }
 
     populate(emptyPos) {
