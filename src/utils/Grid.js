@@ -4,7 +4,7 @@ import {
 } from './constants';
 
 export default class Grid {
-    constructor(size) {
+    constructor(size = 0) {
         this.size = size;
         this.rows = new Array(size);
 
@@ -21,8 +21,9 @@ export default class Grid {
 
         return {
             next: () => {
-                const done = y === this.size;
-                const id = done ? undefined : this.rows[y][x];
+                const done = y >= this.size;
+                const row = this.rows[y];
+                const id = done ? undefined : row[x];
                 const value = { x, y, id };
 
                 if (x === y) {
