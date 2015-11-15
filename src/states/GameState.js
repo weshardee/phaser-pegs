@@ -1,6 +1,7 @@
-import Grid from '../utils/Grid';
 import Peg from '../objects/Peg';
 import Tile from '../objects/Tile';
+import redux from '../redux';
+import * as gridActions from '../redux/actions/grid';
 
 import {
     getGamePosition,
@@ -48,6 +49,9 @@ class GameState extends Phaser.State {
     }
 
     create() {
+        redux.subscribe(this.onUpdate.bind(this));
+        this.onUpdate();
+
         this.game.stage.backgroundColor = BG_COLOR;
 
         // initialize groups for tiles and pegs
@@ -57,11 +61,7 @@ class GameState extends Phaser.State {
         this.deadPegsGroup = this.game.add.group(this.boardGroup, 'deadPegs');
 
         // build board
-        this.grid = new Grid(BOARD_SIZE);
-        for (const { x, y } of this.grid) {
-            const gamePosition = getGamePosition(x, y);
-            this.addTile(gamePosition);
-        }
+        redux.dispatch(gridActions.createGrid(BOARD_SIZE));
 
         // center board
         this.boardGroup.x = MIDDLE;
@@ -77,6 +77,28 @@ class GameState extends Phaser.State {
         this.endMessage = this.game.add.text(this.world.width - 20, 14, '', TEXT_STYLE);
         this.endMessage.anchor.x = 1;
         this.endMessage.alpha = 0;
+    }
+
+    onUpdate() {
+        const state = redux.getState();
+        const { grid } = state;
+
+        if (grid !== this.grid) {
+            this.grid = grid;
+            this.buildBoard(grid);
+        }
+    }
+
+    buildBoard(grid) {
+        if (grid === undefined) {
+            return;
+        }
+
+        // for each grid space, we need a tile
+        for (const { x, y } of grid) {
+            const gamePosition = getGamePosition(x, y);
+            this.addTile(gamePosition);
+        }
     }
 
     populate(emptyPos) {
@@ -104,6 +126,17 @@ class GameState extends Phaser.State {
     addTile({ x, y }) {
         const tile = new Tile(this.game, x, y, this.onTileClick, this);
         this.tilesGroup.add(tile);
+        return tile;
+    }
+
+    getSpriteAt({ x, y }, group) {
+        return group.children.find(sprite => {
+            const gridPos = getGridPosition(sprite);
+            if (gridPos.x === x && gridPos.y === y) {
+                return true;
+            }
+            return false;
+        });
     }
 
     onTileClick(sprite) {
